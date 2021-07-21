@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-const mongoDB = `mongodb+srv://apoorv:samplepass123@cluster0.h1lql.mongodb.net/local_library?retryWrites=true&w=majority`;
+const mongoDB = process.env.MONGODB_API;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
