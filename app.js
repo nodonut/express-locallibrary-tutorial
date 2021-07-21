@@ -1,3 +1,4 @@
+require('dotenv/config');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -7,7 +8,8 @@ const mongoose = require('mongoose');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 
-const mongoDB = process.env.MONGODB_API;
+const MONGODB_PASS = process.env.MONGODB_PASS;
+const mongoDB = `mongodb+srv://apoorv:${MONGODB_PASS}@cluster0.h1lql.mongodb.net/local_library?retryWrites=true&w=majority`;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const db = mongoose.connection;
