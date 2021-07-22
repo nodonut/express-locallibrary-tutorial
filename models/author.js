@@ -9,6 +9,11 @@ const AuthorSchema = new Schema({
   date_of_death: { type: Date },
 });
 
+// Virtual for author's full name
+AuthorSchema.virtual('name').get(function () {
+  return this.family_name + ', ' + this.first_name;
+});
+
 AuthorSchema.virtual('lifespan').get(function () {
   let lifetime_string = '';
   if (this.date_of_birth) {
