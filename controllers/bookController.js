@@ -155,7 +155,7 @@ exports.book_create_post = [
 ];
 
 // Display book delete form on GET.
-exports.book_delete_get = function (req, res) {
+exports.book_delete_get = function (req, res, next) {
   res.send('NOT IMPLEMENTED: Book delete GET');
 };
 
