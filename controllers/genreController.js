@@ -13,7 +13,10 @@ exports.genre_list = function (req, res) {
         return next(err);
       }
 
-      res.render('genre_list', { title: 'Genre List', genre_list: list_of_genres });
+      res.render('genre_list', {
+        title: 'Genre List',
+        genre_list: list_of_genres,
+      });
     });
 };
 
@@ -59,7 +62,11 @@ exports.genre_create_post = [
     const genre = new Genre({ name: req.body.name });
 
     if (!errors.isEmpty()) {
-      res.render('genre_form', { title: 'Create Genre', genre: genre, errors: errors.array() });
+      res.render('genre_form', {
+        title: 'Create Genre',
+        genre: genre,
+        errors: errors.array(),
+      });
     } else {
       Genre.findOne({ name: req.body.name }).exec(function (err, found_genre) {
         if (err) return next(err);
@@ -132,11 +139,41 @@ exports.genre_delete_post = function (req, res, next) {
 };
 
 // Display Genre update form on GET.
-exports.genre_update_get = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre update GET');
+exports.genre_update_get = function (req, res, next) {
+  Genre.findById(req.params.id).exec(function (err, genre) {
+    if (err) return next(err);
+
+    res.render('genre_form', { title: 'Update Genre', genre });
+  });
 };
 
 // Handle Genre update on POST.
-exports.genre_update_post = function (req, res) {
-  res.send('NOT IMPLEMENTED: Genre update POST');
-};
+exports.genre_update_post = [
+  body('name', 'Genre name required').trim().isLength({ min: 1 }).escape(),
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const newGenre = new Genre({
+      name: req.body.name,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render('genre_form', {
+        title: 'Update Genre',
+        genre: newGenre,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      Genre.findByIdAndUpdate(
+        req.params.id,
+        newGenre,
+        {},
+        function (err, theGenre) {
+          if (err) return next(err);
+          res.redirect(theGenre.url);
+        }
+      );
+    }
+  },
+];
